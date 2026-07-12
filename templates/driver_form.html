@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if driver else 'Add' }} Driver — TransitOps{% endblock %}
+{% block page_title %}{{ 'Edit Driver' if driver else 'Register New Driver' }}{% endblock %}
+{% block content %}
+<div class="panel form-panel">
+  <form method="POST">
+    <div class="form-grid">
+      <div class="form-field">
+        <label>Full Name</label>
+        <input type="text" name="name" class="input" required value="{{ driver.name if driver else '' }}">
+      </div>
+      <div class="form-field">
+        <label>Phone</label>
+        <input type="text" name="phone" class="input" value="{{ driver.phone if driver else '' }}">
+      </div>
+      <div class="form-field">
+        <label>License Number</label>
+        <input type="text" name="license_number" class="input" required value="{{ driver.license_number if driver else '' }}">
+      </div>
+      <div class="form-field">
+        <label>License Expiry</label>
+        <input type="date" name="license_expiry" class="input" required value="{{ driver.license_expiry if driver else '' }}">
+      </div>
+      {% if current_role == 'safety_officer' %}
+      <div class="form-field">
+        <label>Safety Score (0–100)</label>
+        <input type="number" min="0" max="100" name="safety_score" class="input" value="{{ driver.safety_score if driver else 100 }}">
+      </div>
+      {% endif %}
+      {% if driver %}
+      <div class="form-field">
+        <label>Status</label>
+        <select name="status" class="input">
+          {% for s in ['available','on_trip','off_duty'] %}
+          <option value="{{ s }}" {{ 'selected' if driver.status==s }}>{{ s.replace('_',' ') }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      {% endif %}
+    </div>
+    <div class="form-actions">
+      <a href="{{ url_for('drivers_list') }}" class="btn btn-ghost">Cancel</a>
+      <button type="submit" class="btn btn-primary">{{ 'Save Changes' if driver else 'Add Driver' }}</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

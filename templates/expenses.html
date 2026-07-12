@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Expenses — TransitOps{% endblock %}
+{% block page_title %}Expenses &amp; Fuel Logs{% endblock %}
+{% block content %}
+
+<div class="page-header-row">
+  <p class="page-desc">Total logged: ₹{{ '%.0f'|format(total) }}</p>
+  {% if current_role in ['fleet_manager','driver','financial_analyst'] %}
+  <a href="{{ url_for('expense_new') }}" class="btn btn-primary">+ Log Expense</a>
+  {% endif %}
+</div>
+
+<div class="kpi-grid kpi-grid-compact">
+  {% for cat, amt in by_category.items() %}
+  <div class="kpi-card">
+    <span class="kpi-label">{{ cat|capitalize }}</span>
+    <span class="kpi-value">₹{{ '%.0f'|format(amt) }}</span>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="panel">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Vehicle</th>
+        <th>Trip</th>
+        <th>Category</th>
+        <th>Amount</th>
+        <th>Liters</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for e in expenses %}
+      <tr>
+        <td>{{ e.expense_date }}</td>
+        <td>{{ e.vehicle.plate_number }}</td>
+        <td>{{ '#' + e.trip_id|string if e.trip_id else '—' }}</td>
+        <td><span class="badge badge-muted">{{ e.category }}</span></td>
+        <td>₹{{ '%.2f'|format(e.amount) }}</td>
+        <td>{{ e.liters or '—' }}</td>
+        <td>{{ e.notes or '—' }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7" class="empty-state">No expenses logged yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

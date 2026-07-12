@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}TransitOps — Sign In{% endblock %}
+{% block plain_content %}
+<div class="login-wrap">
+  <div class="login-visual">
+    <div class="login-visual-inner">
+      <div class="login-logo">T</div>
+      <h1>TransitOps</h1>
+      <p>Smart Transport Operations Platform</p>
+      <ul class="login-points">
+        <li>Real-time fleet &amp; dispatch visibility</li>
+        <li>Automated compliance &amp; maintenance alerts</li>
+        <li>Unified expense &amp; profitability analytics</li>
+      </ul>
+    </div>
+  </div>
+  <div class="login-form-panel">
+    <div class="login-card">
+      <h2>Sign in to your workspace</h2>
+      <p class="login-sub">Select your role to continue.</p>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash-stack">
+          {% for category, message in messages %}
+            <div class="flash flash-{{ category }}">{{ message }}</div>
+          {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <form method="POST" action="{{ url_for('login') }}" class="login-form">
+        <label class="field-label">Your name</label>
+        <input type="text" name="name" placeholder="e.g. Priya Sharma" class="input">
+
+        <label class="field-label">Role</label>
+        <div class="role-grid">
+          <label class="role-card">
+            <input type="radio" name="role" value="fleet_manager" required>
+            <div class="role-card-body">
+              <span class="role-icon">▣</span>
+              <span class="role-title">Fleet Manager</span>
+              <span class="role-desc">Vehicles, maintenance, lifecycle</span>
+            </div>
+          </label>
+          <label class="role-card">
+            <input type="radio" name="role" value="driver">
+            <div class="role-card-body">
+              <span class="role-icon">➤</span>
+              <span class="role-title">Driver</span>
+              <span class="role-desc">Trips &amp; live dispatch</span>
+            </div>
+          </label>
+          <label class="role-card">
+            <input type="radio" name="role" value="safety_officer">
+            <div class="role-card-body">
+              <span class="role-icon">☺</span>
+              <span class="role-title">Safety Officer</span>
+              <span class="role-desc">License &amp; compliance</span>
+            </div>
+          </label>
+          <label class="role-card">
+            <input type="radio" name="role" value="financial_analyst">
+            <div class="role-card-body">
+              <span class="role-icon">₹</span>
+              <span class="role-title">Financial Analyst</span>
+              <span class="role-desc">Costs &amp; profitability</span>
+            </div>
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">Enter Platform →</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

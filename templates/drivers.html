@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Drivers — TransitOps{% endblock %}
+{% block page_title %}Driver Roster{% endblock %}
+{% block content %}
+
+<div class="page-header-row">
+  <p class="page-desc">{{ drivers|length }} drivers registered.</p>
+  {% if current_role in ['fleet_manager','safety_officer'] %}
+  <a href="{{ url_for('driver_new') }}" class="btn btn-primary">+ Add Driver</a>
+  {% endif %}
+</div>
+
+<div class="panel">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>License No.</th>
+        <th>License Expiry</th>
+        <th>Safety Score</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for d in drivers %}
+      <tr>
+        <td>{{ d.name }}</td>
+        <td>{{ d.phone or '—' }}</td>
+        <td class="mono">{{ d.license_number }}</td>
+        <td>
+          {{ d.license_expiry }}
+          {% if d.license_expired() %}<span class="badge badge-danger">Expired</span>
+          {% elif d.license_expiring_soon() %}<span class="badge badge-warn">Expiring</span>{% endif %}
+        </td>
+        <td>
+          <div class="score-bar">
+            <div class="score-bar-fill" style="width:{{ d.safety_score }}%; background:{{ '#22b07d' if d.safety_score>=85 else ('#f5a524' if d.safety_score>=70 else '#e5484d') }}"></div>
+          </div>
+          <span class="score-text">{{ d.safety_score }}</span>
+        </td>
+        <td><span class="badge badge-{{ {'available':'success','on_trip':'info','off_duty':'muted'}[d.status] }}">{{ d.status.replace('_',' ') }}</span></td>
+        <td class="row-actions">
+          {% if current_role in ['fleet_manager','safety_officer'] %}
+          <a href="{{ url_for('driver_edit', driver_id=d.id) }}" class="link-action">Edit</a>
+          <form method="POST" action="{{ url_for('driver_delete', driver_id=d.id) }}" class="inline-form" onsubmit="return confirm('Remove this driver?');">
+            <button type="submit" class="link-action link-danger">Delete</button>
+          </form>
+          {% else %}
+          <span class="empty-cell">—</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7" class="empty-state">No drivers registered yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
