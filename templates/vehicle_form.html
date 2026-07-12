@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if vehicle else 'Add' }} Vehicle — TransitOps{% endblock %}
+{% block page_title %}{{ 'Edit Vehicle' if vehicle else 'Register New Vehicle' }}{% endblock %}
+{% block content %}
+<div class="panel form-panel">
+  <form method="POST">
+    <div class="form-grid">
+      <div class="form-field">
+        <label>Plate Number</label>
+        <input type="text" name="plate_number" class="input" required value="{{ vehicle.plate_number if vehicle else '' }}" placeholder="GJ01AB1234">
+      </div>
+      <div class="form-field">
+        <label>Vehicle Type</label>
+        <select name="vehicle_type" class="input" required>
+          {% for t in ['Truck','Mini Truck','Van','Pickup','Trailer'] %}
+          <option value="{{ t }}" {{ 'selected' if vehicle and vehicle.vehicle_type==t }}>{{ t }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Capacity (kg)</label>
+        <input type="number" step="0.01" name="capacity_kg" class="input" value="{{ vehicle.capacity_kg if vehicle else '' }}">
+      </div>
+      <div class="form-field">
+        <label>Odometer (km)</label>
+        <input type="number" step="0.01" name="odometer_km" class="input" value="{{ vehicle.odometer_km if vehicle else 0 }}">
+      </div>
+      {% if vehicle %}
+      <div class="form-field">
+        <label>Status</label>
+        <select name="status" class="input">
+          {% for s in ['available','on_trip','maintenance','inactive'] %}
+          <option value="{{ s }}" {{ 'selected' if vehicle.status==s }}>{{ s.replace('_',' ') }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      {% endif %}
+    </div>
+    <div class="form-actions">
+      <a href="{{ url_for('vehicles_list') }}" class="btn btn-ghost">Cancel</a>
+      <button type="submit" class="btn btn-primary">{{ 'Save Changes' if vehicle else 'Add Vehicle' }}</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

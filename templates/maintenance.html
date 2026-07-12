@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Maintenance — TransitOps{% endblock %}
+{% block page_title %}Maintenance Records{% endblock %}
+{% block content %}
+
+<div class="page-header-row">
+  <p class="page-desc">{{ records|length }} maintenance records.</p>
+  {% if current_role == 'fleet_manager' %}
+  <a href="{{ url_for('maintenance_new') }}" class="btn btn-primary">+ Schedule Maintenance</a>
+  {% endif %}
+</div>
+
+<div class="panel">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Vehicle</th>
+        <th>Type</th>
+        <th>Scheduled</th>
+        <th>Completed</th>
+        <th>Cost</th>
+        <th>Status</th>
+        {% if current_role == 'fleet_manager' %}<th></th>{% endif %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for m in records %}
+      <tr>
+        <td>{{ m.vehicle.plate_number }}</td>
+        <td>{{ m.maintenance_type }}</td>
+        <td>{{ m.scheduled_date }}</td>
+        <td>{{ m.completed_date or '—' }}</td>
+        <td>₹{{ '%.0f'|format(m.cost) }}</td>
+        <td><span class="badge badge-{{ {'scheduled':'info','in_progress':'warn','completed':'success'}[m.status] }}">{{ m.status.replace('_',' ') }}</span></td>
+        {% if current_role == 'fleet_manager' %}
+        <td class="row-actions">
+          {% if m.status != 'completed' %}
+          <form method="POST" action="{{ url_for('maintenance_complete', m_id=m.id) }}" class="inline-form">
+            <button type="submit" class="link-action">Mark Complete</button>
+          </form>
+          {% else %}
+          <span class="empty-cell">—</span>
+          {% endif %}
+        </td>
+        {% endif %}
+      </tr>
+      {% else %}
+      <tr><td colspan="7" class="empty-state">No maintenance records yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

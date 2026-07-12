@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Trips — TransitOps{% endblock %}
+{% block page_title %}Dispatch &amp; Trips{% endblock %}
+{% block content %}
+
+<div class="page-header-row">
+  <p class="page-desc">{{ trips|length }} total trips logged.</p>
+  {% if current_role in ['fleet_manager','driver'] %}
+  <a href="{{ url_for('trip_new') }}" class="btn btn-primary">+ New Dispatch</a>
+  {% endif %}
+</div>
+
+<div class="panel">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Route</th>
+        <th>Vehicle</th>
+        <th>Driver</th>
+        <th>Start</th>
+        <th>End</th>
+        <th>Distance</th>
+        <th>Status</th>
+        {% if current_role in ['fleet_manager','driver'] %}<th></th>{% endif %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for t in trips %}
+      <tr>
+        <td class="mono">#{{ t.id }}</td>
+        <td>{{ t.origin }} → {{ t.destination }}</td>
+        <td>{{ t.vehicle.plate_number }}</td>
+        <td>{{ t.driver.name }}</td>
+        <td>{{ t.start_time.strftime('%d %b %Y, %H:%M') }}</td>
+        <td>{{ t.end_time.strftime('%d %b %Y, %H:%M') }}</td>
+        <td>{{ t.distance_km }} km</td>
+        <td>
+          <span class="badge badge-{{ {'scheduled':'info','ongoing':'warn','completed':'success','cancelled':'muted'}[t.status] }}">{{ t.status }}</span>
+        </td>
+        {% if current_role in ['fleet_manager','driver'] %}
+        <td class="row-actions">
+          {% if t.status == 'scheduled' %}
+          <form method="POST" action="{{ url_for('trip_update_status', trip_id=t.id) }}" class="inline-form">
+            <input type="hidden" name="status" value="ongoing">
+            <button type="submit" class="link-action">Start</button>
+          </form>
+          <form method="POST" action="{{ url_for('trip_update_status', trip_id=t.id) }}" class="inline-form" onsubmit="return confirm('Cancel this trip?');">
+            <input type="hidden" name="status" value="cancelled">
+            <button type="submit" class="link-action link-danger">Cancel</button>
+          </form>
+          {% elif t.status == 'ongoing' %}
+          <form method="POST" action="{{ url_for('trip_update_status', trip_id=t.id) }}" class="inline-form">
+            <input type="hidden" name="status" value="completed">
+            <button type="submit" class="link-action">Complete</button>
+          </form>
+          {% else %}
+          <span class="empty-cell">—</span>
+          {% endif %}
+        </td>
+        {% endif %}
+      </tr>
+      {% else %}
+      <tr><td colspan="9" class="empty-state">No trips logged yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

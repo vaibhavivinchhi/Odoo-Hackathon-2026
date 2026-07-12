@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Vehicles — TransitOps{% endblock %}
+{% block page_title %}Vehicle Fleet{% endblock %}
+{% block content %}
+
+<div class="page-header-row">
+  <p class="page-desc">{{ vehicles|length }} vehicles registered in the fleet.</p>
+  {% if current_role == 'fleet_manager' %}
+  <a href="{{ url_for('vehicle_new') }}" class="btn btn-primary">+ Add Vehicle</a>
+  {% endif %}
+</div>
+
+<div class="panel">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Plate No.</th>
+        <th>Type</th>
+        <th>Capacity (kg)</th>
+        <th>Odometer (km)</th>
+        <th>Status</th>
+        <th>Next Maintenance</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for v in vehicles %}
+      <tr>
+        <td class="mono">{{ v.plate_number }}</td>
+        <td>{{ v.vehicle_type }}</td>
+        <td>{{ '%.0f'|format(v.capacity_kg) }}</td>
+        <td>{{ '%.0f'|format(v.odometer_km) }}</td>
+        <td>
+          <span class="badge badge-{{ {'available':'success','on_trip':'info','maintenance':'warn','inactive':'muted'}[v.status] }}">
+            {{ v.status.replace('_',' ') }}
+          </span>
+        </td>
+        <td>
+          {% if v.next_maintenance_due %}
+            {{ v.next_maintenance_due }}
+            {% if v.maintenance_overdue() %}<span class="badge badge-danger">Overdue</span>
+            {% elif v.maintenance_due_soon() %}<span class="badge badge-warn">Soon</span>{% endif %}
+          {% else %}
+            <span class="empty-cell">—</span>
+          {% endif %}
+        </td>
+        <td class="row-actions">
+          {% if current_role == 'fleet_manager' %}
+          <a href="{{ url_for('vehicle_edit', vehicle_id=v.id) }}" class="link-action">Edit</a>
+          <form method="POST" action="{{ url_for('vehicle_delete', vehicle_id=v.id) }}" class="inline-form" onsubmit="return confirm('Remove this vehicle?');">
+            <button type="submit" class="link-action link-danger">Delete</button>
+          </form>
+          {% else %}
+          <span class="empty-cell">—</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7" class="empty-state">No vehicles registered yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

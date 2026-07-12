@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}New Dispatch — TransitOps{% endblock %}
+{% block page_title %}Create New Dispatch{% endblock %}
+{% block content %}
+<div class="panel form-panel">
+  <form method="POST">
+    <div class="form-grid">
+      <div class="form-field">
+        <label>Vehicle</label>
+        <select name="vehicle_id" class="input" required>
+          <option value="">Select vehicle…</option>
+          {% for v in vehicles %}
+          <option value="{{ v.id }}" {{ 'selected' if form and form.get('vehicle_id')==v.id|string }} {{ 'disabled' if v.status in ['maintenance','inactive'] }}>
+            {{ v.plate_number }} — {{ v.vehicle_type }} ({{ v.status.replace('_',' ') }})
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Driver</label>
+        <select name="driver_id" class="input" required>
+          <option value="">Select driver…</option>
+          {% for d in drivers %}
+          <option value="{{ d.id }}" {{ 'selected' if form and form.get('driver_id')==d.id|string }} {{ 'disabled' if d.license_expired() or d.status=='off_duty' }}>
+            {{ d.name }} {% if d.license_expired() %}(license expired){% endif %}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Origin</label>
+        <input type="text" name="origin" class="input" required value="{{ form.get('origin') if form else '' }}">
+      </div>
+      <div class="form-field">
+        <label>Destination</label>
+        <input type="text" name="destination" class="input" required value="{{ form.get('destination') if form else '' }}">
+      </div>
+      <div class="form-field">
+        <label>Start Time</label>
+        <input type="datetime-local" name="start_time" class="input" required value="{{ form.get('start_time') if form else '' }}">
+      </div>
+      <div class="form-field">
+        <label>End Time (estimated)</label>
+        <input type="datetime-local" name="end_time" class="input" required value="{{ form.get('end_time') if form else '' }}">
+      </div>
+      <div class="form-field">
+        <label>Estimated Distance (km)</label>
+        <input type="number" step="0.1" name="distance_km" class="input" value="{{ form.get('distance_km') if form else '' }}">
+      </div>
+      <div class="form-field form-field-wide">
+        <label>Notes</label>
+        <input type="text" name="notes" class="input" value="{{ form.get('notes') if form else '' }}">
+      </div>
+    </div>
+    <p class="form-hint">Vehicles under maintenance/inactive and drivers with expired licenses or off-duty status are disabled. The system also blocks overlapping bookings automatically.</p>
+    <div class="form-actions">
+      <a href="{{ url_for('trips_list') }}" class="btn btn-ghost">Cancel</a>
+      <button type="submit" class="btn btn-primary">Schedule Trip</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

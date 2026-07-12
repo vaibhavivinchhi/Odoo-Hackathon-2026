@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Schedule Maintenance — TransitOps{% endblock %}
+{% block page_title %}Schedule Maintenance{% endblock %}
+{% block content %}
+<div class="panel form-panel">
+  <form method="POST">
+    <div class="form-grid">
+      <div class="form-field">
+        <label>Vehicle</label>
+        <select name="vehicle_id" class="input" required>
+          <option value="">Select vehicle…</option>
+          {% for v in vehicles %}
+          <option value="{{ v.id }}">{{ v.plate_number }} — {{ v.vehicle_type }} ({{ v.status.replace('_',' ') }})</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Maintenance Type</label>
+        <select name="maintenance_type" class="input" required>
+          {% for t in ['Oil Change','Engine Service','Tire Replacement','Brake Service','Inspection','Other'] %}
+          <option value="{{ t }}">{{ t }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Scheduled Date</label>
+        <input type="date" name="scheduled_date" class="input" required>
+      </div>
+      <div class="form-field">
+        <label>Estimated Cost (₹)</label>
+        <input type="number" step="0.01" name="cost" class="input" value="0">
+      </div>
+      <div class="form-field">
+        <label>Next Due (days after completion)</label>
+        <input type="number" name="next_due_days" class="input" value="90">
+      </div>
+      <div class="form-field form-field-wide">
+        <label>Description</label>
+        <input type="text" name="description" class="input">
+      </div>
+    </div>
+    <p class="form-hint">Scheduling maintenance will set the vehicle status to "maintenance" and block it from new dispatches until completed.</p>
+    <div class="form-actions">
+      <a href="{{ url_for('maintenance_list') }}" class="btn btn-ghost">Cancel</a>
+      <button type="submit" class="btn btn-primary">Schedule Maintenance</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
