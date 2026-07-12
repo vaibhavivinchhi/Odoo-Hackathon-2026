@@ -8,16 +8,304 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-body{background:#f4f7fb}
-.sidebar{position:fixed;left:0;top:0;width:230px;height:100vh;background:#0f172a;padding:20px}
-.sidebar h3,.sidebar a{color:#fff}
-.sidebar a{display:block;text-decoration:none;padding:10px;border-radius:8px;margin:6px 0}
-.sidebar a:hover{background:#2563eb}
-.content{margin-left:250px;padding:24px}
-.card{border:none;border-radius:12px;box-shadow:0 3px 10px rgba(0,0,0,.08)}
+	*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:linear-gradient(135deg,#2563eb,#0f172a);
+    min-height:100vh;
+    color:#fff;
+}
+
+/* Background */
+
+.bg-circle{
+    position:fixed;
+    width:350px;
+    height:350px;
+    border-radius:50%;
+    background:rgba(255,255,255,.08);
+    filter:blur(10px);
+    z-index:-1;
+}
+
+.circle1{
+    top:-120px;
+    left:-120px;
+}
+
+.circle2{
+    bottom:-120px;
+    right:-120px;
+}
+
+/* Sidebar */
+
+.sidebar{
+    position:fixed;
+    left:20px;
+    top:20px;
+    width:240px;
+    height:calc(100vh - 40px);
+    background:rgba(255,255,255,.12);
+    backdrop-filter:blur(15px);
+    border-radius:20px;
+    padding:20px;
+    box-shadow:0 15px 35px rgba(0,0,0,.25);
+}
+
+.sidebar h3{
+    text-align:center;
+    margin-bottom:25px;
+    font-weight:700;
+    color:#fff;
+}
+
+.sidebar a{
+    display:block;
+    color:#fff;
+    text-decoration:none;
+    padding:12px 15px;
+    border-radius:12px;
+    margin-bottom:10px;
+    transition:.3s;
+}
+
+.sidebar a i{
+    width:22px;
+}
+
+.sidebar a:hover,
+.sidebar a.active{
+    background:#10b981;
+    transform:translateX(5px);
+}
+
+
+/* Content */
+
+.content{
+    margin-left:250px;
+    padding:30px;
+}
+
+
+/* Cards */
+
+.card{
+    background:rgba(255,255,255,.12);
+    backdrop-filter:blur(12px);
+    border:none;
+    border-radius:15px;
+    color:white;
+    box-shadow:0 10px 30px rgba(0,0,0,.3);
+}
+
+/* Form */
+
+.form-control,
+.form-select{
+    background:rgba(255,255,255,.15);
+    border:none;
+    color:#fff;
+    border-radius:10px;
+    height:48px;
+}
+
+.form-control::placeholder{
+    color:#ddd;
+}
+
+.form-control:focus,
+.form-select:focus{
+    background:rgba(255,255,255,.25);
+    color:#fff;
+    box-shadow:none;
+}
+
+.form-select option{
+    color:#000;
+}
+
+/* Form */
+
+.form-control,
+.form-select{
+    background:rgba(255,255,255,.15);
+    border:none;
+    color:#fff;
+    border-radius:10px;
+    height:48px;
+}
+
+.form-control::placeholder{
+    color:#ddd;
+}
+
+.form-control:focus,
+.form-select:focus{
+    background:rgba(255,255,255,.25);
+    color:#fff;
+    box-shadow:none;
+}
+
+.form-select option{
+    color:#000;
+}
+
+.table{
+    color:#fff;
+    margin-bottom:0;
+}
+
+.table thead{
+    background:rgba(255,255,255,.15);
+}
+
+.table thead th{
+    color:#fff;
+    border:none;
+    background:transparent;
+}
+
+.table tbody td{
+    color:#fff;
+    border-color:rgba(255,255,255,.12);
+}
+
+.table-hover tbody tr:hover{
+    background:rgba(255,255,255,.08);
+}
+
+
+/* Buttons */
+
+.btn-primary{
+    background:#10b981;
+    border:none;
+    border-radius:10px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.btn-primary:hover{
+    background:#059669;
+    transform:translateY(-2px);
+}
+
+.btn-success{
+    background:#10b981;
+    border:none;
+    border-radius:10px;
+    font-weight:600;
+}
+
+.btn-success:hover{
+    background:#059669;
+}
+
+/* Premium Modal */
+
+.modal-dialog{
+    max-width:650px;
+}
+
+.modal-content{
+    background:rgba(15,23,42,.95);
+    backdrop-filter:blur(18px);
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:22px;
+    overflow:hidden;
+    box-shadow:0 20px 50px rgba(0,0,0,.45);
+    color:#fff;
+}
+
+.modal-header{
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+    border-bottom:none;
+    color:#fff;
+    padding:18px 25px;
+}
+
+.modal-header h5{
+    font-size:22px;
+    font-weight:600;
+}
+
+.modal-body{
+    padding:30px;
+}
+
+.modal-body label{
+    color:#fff;
+    font-weight:500;
+    margin-bottom:8px;
+}
+
+.modal-body .form-control,
+.modal-body .form-select{
+    height:52px;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.15);
+    color:#fff;
+    border-radius:12px;
+    padding:0 15px;
+    transition:.3s;
+}
+
+.modal-body .form-control::placeholder{
+    color:#cbd5e1;
+}
+
+.modal-body .form-control:focus,
+.modal-body .form-select:focus{
+    background:rgba(255,255,255,.15);
+    border-color:#10b981;
+    box-shadow:0 0 12px rgba(16,185,129,.4);
+}
+
+.modal-body .form-select option{
+    color:#000;
+}
+
+.modal-footer{
+    border-top:1px solid rgba(255,255,255,.08);
+    padding:18px 25px;
+}
+
+.btn-close{
+    filter:invert(1);
+}
+
+/* Responsive */
+
+@media(max-width:768px){
+
+.sidebar{
+    position:relative;
+    width:100%;
+    height:auto;
+    left:0;
+    top:0;
+    border-radius:0;
+}
+
+.content{
+    margin-left:0;
+    padding:20px;
+}
+
+}
+
 </style>
 </head>
 <body>
+	<div class="bg-circle circle1"></div>
+	<div class="bg-circle circle2"></div>
 <div class="sidebar">
 <h3>🚛 TransitOps</h3>
 <a href="dashboard.html"><i class="fa fa-chart-line"></i> Dashboard</a>
