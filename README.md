@@ -74,11 +74,3 @@ transitops/
     ├── css/style.css        # Full design system
     └── js/main.js
 ```
-
-## Demo Tips (for judges)
-
-1. Log in as **Fleet Manager** → show the dashboard, then try adding a vehicle.
-2. Log in as **Driver** → create a new trip; try picking an expired-license driver to show the validation block live.
-3. Try scheduling a trip on a vehicle/driver that's already booked in an overlapping window to show the double-booking guard.
-4. Log in as **Safety Officer** → show license alerts and safety score editing.
-5. Log in as **Financial Analyst** → show the cost-by-vehicle chart and expense trend.
