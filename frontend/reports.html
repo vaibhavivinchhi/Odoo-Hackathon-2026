@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TransitOps - Reports & Analytics</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body{background:#f4f7fb}
+.sidebar{position:fixed;left:0;top:0;width:230px;height:100vh;background:#0f172a;padding:20px}
+.sidebar h3,.sidebar a{color:#fff}
+.sidebar a{display:block;text-decoration:none;padding:10px;border-radius:8px;margin:6px 0}
+.sidebar a:hover{background:#2563eb}
+.content{margin-left:250px;padding:24px}
+.card{border:none;border-radius:12px;box-shadow:0 3px 10px rgba(0,0,0,.08)}
+</style>
+</head>
+<body>
+<div class="sidebar">
+<h3>🚛 TransitOps</h3>
+<a href="dashboard.html"><i class="fa fa-chart-line"></i> Dashboard</a>
+<a href="vehicles.html"><i class="fa fa-truck"></i> Vehicles</a>
+<a href="drivers.html"><i class="fa fa-user"></i> Drivers</a>
+<a href="trip_management.html"><i class="fa fa-route"></i> Trips</a>
+<a href="maintenance.html"><i class="fa fa-tools"></i> Maintenance</a>
+<a href="fuel_expense.html"><i class="fa fa-gas-pump"></i> Fuel & Expense</a>
+<a href="reports.html"><i class="fa fa-chart-pie"></i> Reports</a>
+</div>
+
+<div class="content">
+<h2 class="mb-4">Reports & Analytics</h2>
+
+<div class="row mb-4">
+<div class="col-md-3"><div class="card p-3 text-center"><h3>82%</h3><small>Fleet Utilization</small></div></div>
+<div class="col-md-3"><div class="card p-3 text-center"><h3>11.5 km/L</h3><small>Fuel Efficiency</small></div></div>
+<div class="col-md-3"><div class="card p-3 text-center"><h3>₹1,58,000</h3><small>Revenue</small></div></div>
+<div class="col-md-3"><div class="card p-3 text-center"><h3>24%</h3><small>Vehicle ROI</small></div></div>
+</div>
+
+<div class="row">
+<div class="col-lg-6">
+<div class="card p-3">
+<h5>Monthly Fuel Cost</h5>
+<canvas id="fuelChart"></canvas>
+</div>
+</div>
+
+<div class="col-lg-6">
+<div class="card p-3">
+<h5>Vehicle Status</h5>
+<canvas id="statusChart"></canvas>
+</div>
+</div>
+</div>
+
+<div class="row mt-4">
+<div class="col-lg-6">
+<div class="card p-3">
+<h5>Trip Completion</h5>
+<canvas id="tripChart"></canvas>
+</div>
+</div>
+
+<div class="col-lg-6">
+<div class="card p-3">
+<h5>Expense Distribution</h5>
+<canvas id="expenseChart"></canvas>
+</div>
+</div>
+</div>
+
+<div class="card mt-4 p-3">
+<div class="d-flex justify-content-between">
+<h5>Operational Summary</h5>
+<button class="btn btn-success" onclick="exportCSV()"><i class="fa fa-download"></i> Export CSV</button>
+</div>
+<table class="table table-striped mt-3">
+<thead><tr><th>Vehicle</th><th>Trips</th><th>Fuel Cost</th><th>Maintenance</th><th>ROI</th></tr></thead>
+<tbody>
+<tr><td>Van-05</td><td>18</td><td>₹18,500</td><td>₹4,200</td><td>28%</td></tr>
+<tr><td>Truck-12</td><td>12</td><td>₹26,800</td><td>₹8,700</td><td>21%</td></tr>
+<tr><td>Mini Van</td><td>22</td><td>₹15,200</td><td>₹2,600</td><td>31%</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<script>
+new Chart(document.getElementById('fuelChart'),{
+type:'bar',
+data:{labels:['Jan','Feb','Mar','Apr','May','Jun'],datasets:[{label:'Fuel Cost',data:[12000,14000,13500,15000,14500,17000]}]}
+});
+
+new Chart(document.getElementById('statusChart'),{
+type:'doughnut',
+data:{labels:['Available','On Trip','Maintenance'],datasets:[{data:[65,25,10]}]}
+});
+
+new Chart(document.getElementById('tripChart'),{
+type:'line',
+data:{labels:['Jan','Feb','Mar','Apr','May','Jun'],datasets:[{label:'Trips',data:[20,28,32,36,42,48]}]}
+});
+
+new Chart(document.getElementById('expenseChart'),{
+type:'pie',
+data:{labels:['Fuel','Maintenance','Toll','Other'],datasets:[{data:[55,25,10,10]}]}
+});
+
+function exportCSV(){
+alert('CSV export can be connected to your backend.');
+}
+</script>
+</body>
+</html>
